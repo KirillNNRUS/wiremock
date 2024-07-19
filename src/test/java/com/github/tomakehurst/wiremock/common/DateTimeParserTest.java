@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024 Thomas Akehurst
+ * Copyright (C) 2021 Thomas Akehurst
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@ package com.github.tomakehurst.wiremock.common;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Test;
 
-class DateTimeParserTest {
+public class DateTimeParserTest {
 
   @Test
-  void parsesFromDateTimeFormatter() {
+  public void parsesFromDateTimeFormatter() {
     DateTimeParser parser = DateTimeParser.forFormatter(DateTimeFormatter.ISO_DATE_TIME);
     assertThat(
         parser.parseZonedDateTime("2021-06-23T11:12:13Z"),
@@ -39,7 +37,7 @@ class DateTimeParserTest {
   }
 
   @Test
-  void parsesZonedFromFormatString() {
+  public void parsesZonedFromFormatString() {
     DateTimeParser parser = DateTimeParser.forFormat("dd/MM/yyyy HH:mm:ss Z");
     assertThat(
         parser.parseZonedDateTime("23/06/2021 11:22:33 +0000"),
@@ -47,7 +45,7 @@ class DateTimeParserTest {
   }
 
   @Test
-  void parsesLocalDateTimeFromFormatString() {
+  public void parsesLocalDateTimeFromFormatString() {
     DateTimeParser parser = DateTimeParser.forFormat("dd/MM/yyyy HH:mm:ss");
     assertThat(
         parser.parseLocalDateTime("23/06/2021 11:12:13"),
@@ -55,13 +53,25 @@ class DateTimeParserTest {
   }
 
   @Test
-  void parsesLocalDateFromFormatString() {
+  public void parsesLocalDateFromFormatString() {
     DateTimeParser parser = DateTimeParser.forFormat("dd/MM/yyyy");
     assertThat(parser.parseLocalDate("23/06/2021"), is(LocalDate.parse("2021-06-23")));
   }
 
   @Test
-  void parsesUnix() {
+  public void parsesYearMonthFromFormatString() {
+    DateTimeParser parser = DateTimeParser.forFormat("MM/yyyy");
+    assertThat(parser.parseYearMonth("06/2021"), is(YearMonth.parse("2021-06")));
+  }
+
+  @Test
+  public void parsesYearFromFormatString() {
+    DateTimeParser parser = DateTimeParser.forFormat("yy");
+    assertThat(parser.parseYear("21"), is(Year.parse("2021")));
+  }
+
+  @Test
+  public void parsesUnix() {
     DateTimeParser parser = DateTimeParser.forFormat("unix");
     assertThat(
         parser.parseZonedDateTime("1624447353"), is(ZonedDateTime.parse("2021-06-23T11:22:33Z")));
@@ -71,7 +81,7 @@ class DateTimeParserTest {
   }
 
   @Test
-  void parsesEpoch() {
+  public void parsesEpoch() {
     DateTimeParser parser = DateTimeParser.forFormat("epoch");
     assertThat(
         parser.parseZonedDateTime("1624447353000"),
